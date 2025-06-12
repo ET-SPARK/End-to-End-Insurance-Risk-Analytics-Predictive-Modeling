@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 .env
 data/*.csv
+data/MachineLearningRating_v3.txt
 *.csv
 *.log
 venv/
