@@ -34,7 +34,7 @@ class InsurancePreprocessor:
         print("Sample TransactionMonth values:", self.df["TransactionMonth"].head().tolist())
         print("Number of NaT values in TransactionMonth:", self.df["TransactionMonth"].isnull().sum())
 
-        # Drop rows with NaT in TransactionMonth (optional, depending on data quality)
+        # Drop rows with NaT in TransactionMonth
         nat_count = self.df["TransactionMonth"].isnull().sum()
         if nat_count > 0:
             print(f"Warning: {nat_count} rows with NaT in TransactionMonth. Dropping these rows.")
@@ -52,4 +52,3 @@ class InsurancePreprocessor:
     def run_all(self, output_path):
         self.clean_data()
         self.save_cleaned_data(output_path)
-        
