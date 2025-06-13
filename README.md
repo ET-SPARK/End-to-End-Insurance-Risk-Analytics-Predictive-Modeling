@@ -52,12 +52,41 @@ AlphaCare Insurance Solutions (ACIS) is committed to developing cutting-edge ris
 
 ---
 
+## Task 2: Data Pipeline with DVC
+
+### Methodology
+
+- DVC Setup:
+
+  - Installed DVC (pip install dvc) and added to requirements.txt.
+
+  - Initialized DVC (dvc init) to enable data versioning.
+
+  - Configured local remote storage at ~/dvc_storage (dvc remote add -d localstorage dvc_storage).
+
+- Data Versioning:
+
+  - Tracked data/MachineLearningRating_v3.txt and data/insurance_clean.csv with DVC (dvc add).
+
+  - Committed .dvc files and data/.gitignore to Git for version control.
+
+  - Created a new version of insurance_clean.csv by filtering to 2023 data, demonstrating DVC versioning.
+
+  - Pushed data to local remote storage (dvc push) for reproducibility.
+
+- Purpose: Ensures data inputs are version-controlled, enabling auditable and reproducible analyses for regulatory compliance in insurance.
+
+---
+
 ## File Structure
 
 project/
 ├── data/
 │ ├── insurance_clean.csv
 │ ├── MachineLearningRating_v3.txt
+| ├── insurance_clean.csv.dvc
+│ ├── MachineLearningRating_v3.txt.dvc
+| ├── .gitignore
 |
 ├── src/
 │ ├── insurance_eda.py
@@ -81,6 +110,15 @@ project/
 
 2. Run each step using the Jupyter notebooks in the notebook/ folder.
 
+3. Set Up DVC:
+
+```bash
+dvc init
+dvc remote add -d localstorage ~/dvc_storage
+dvc pull
+
+```
+
 ---
 
 ## KPIs
@@ -90,5 +128,7 @@ project/
 - EDA techniques to understand data and discover insights,
 
 - Demonstrating Stats understanding by using suitable statistical distributions and plots to provide evidence for actionable insights gained from EDA.
+
+- Reproducible data pipeline with DVC for auditability and compliance.
 
 ---
