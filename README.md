@@ -78,6 +78,92 @@ AlphaCare Insurance Solutions (ACIS) is committed to developing cutting-edge ris
 
 ---
 
+## Task 3: Hypothesis Testing for Risk Drivers
+
+### Methodology
+
+- **Metrics:**
+
+  - **Claim Frequency:** Proportion of policies with `TotalClaims > 0`.
+  - **Claim Severity:** Average `TotalClaims` for policies with claims.
+  - **Margin:** `TotalPremium - TotalClaims` per policy.
+
+- **Hypotheses:**
+
+  - H₀: No risk differences across provinces (Claim Frequency, Claim Severity).
+  - H₀: No risk differences between zip codes (Claim Frequency, Claim Severity).
+  - H₀: No significant margin difference between zip codes.
+  - H₀: No significant risk difference between Women and Men (Claim Frequency, Claim Severity).
+
+- **Data Segmentation:**
+
+  - **Provinces:** Grouped by `Province` for all regions.
+  - **Zip Codes:** Focused on top 5 zip codes by policy count to manage sample size.
+  - **Gender:** Group A: Male, Group B: Female. Verified equivalence in `CoverType` and `Make` using chi-squared tests.
+
+- **Statistical Testing (implemented in `src/insurance_eda.py`):**
+
+  - **Claim Frequency:** Chi-squared test for categorical proportions.
+  - **Claim Severity and Margin:**
+    - Shapiro-Wilk test for normality.
+    - If normal: ANOVA for multiple groups, t-test for gender.
+    - If non-normal: Kruskal-Wallis for multiple groups, Mann-Whitney U for gender.
+    - Tukey HSD post-hoc test for multiple comparisons when applicable.
+  - **P-value Threshold:** Reject H₀ if p < 0.05.
+
+- **Analysis and Reporting:**
+  - Printed results with hypothesis, metric, statistical test, p-value, and decision.
+  - Provided business recommendations for each rejected hypothesis (e.g., premium adjustments).
+  - All tests executed via `insurance_eda.ipynb`, with DVC used for versioning data and results.
+
+---
+
+### Findings
+
+#### Provinces (Claim Frequency)
+
+- **Result:** Rejected H₀ (p < 0.0001, Chi-squared test). Significant differences in Claim Frequency across provinces.
+- **Details:** Gauteng had the highest claim frequency (~0.34%), while Northern Cape had the lowest (~0.13%).
+- **Business Recommendation:** Increase premiums in high-risk provinces like Gauteng. Offer competitive rates in low-risk areas like Northern Cape.
+
+#### Provinces (Claim Severity)
+
+- **Result:** Rejected H₀ (p < 0.0001, Kruskal-Wallis test). Significant differences in Claim Severity across provinces.
+- **Details:** Tukey HSD showed no significant difference between some provinces, but others did differ.
+- **Business Recommendation:** Use risk-based pricing where Claim Severity is higher; explore loss prevention in those regions.
+
+#### Zip Codes (Claim Frequency)
+
+- **Result:** _Pending — re-run `insurance_eda.ipynb` to update results._
+- **Details:** [Placeholder for chi-squared results across top 5 zip codes]
+- **Business Recommendation:** If significant, adjust underwriting and premiums by zip code risk profile.
+
+#### Zip Codes (Claim Severity)
+
+- **Result:** _Pending — re-run `insurance_eda.ipynb` to update results._
+- **Details:** [Placeholder for Kruskal-Wallis/ANOVA results]
+- **Business Recommendation:** Tailor pricing and coverage to reflect risk in high-severity zip codes.
+
+#### Margin by Zip Codes
+
+- **Result:** _Pending — re-run `insurance_eda.ipynby` to update results._
+- **Details:** [Placeholder for margin analysis]
+- **Business Recommendation:** Adjust pricing strategies in low-margin areas to protect profitability.
+
+#### Gender (Claim Frequency)
+
+- **Result:** _Pending — re-run `insurance_eda.ipynb` to update results._
+- **Details:** [Placeholder for chi-squared results comparing male vs female claim frequency]
+- **Business Recommendation:** If significant, consider risk-based pricing adjustments while adhering to regulatory standards.
+
+#### Gender (Claim Severity)
+
+- **Result:** Failed to reject H₀ (p = 0.2235, Mann-Whitney U test). No statistically significant difference.
+- **Details:** Average Claim Severity — Male: 14,858.55; Female: 17,874.72.
+- **Business Recommendation:** Maintain gender-neutral pricing for Claim Severity. Focus on more predictive variables.
+
+---
+
 ## File Structure
 
 project/
@@ -130,5 +216,7 @@ dvc pull
 - Demonstrating Stats understanding by using suitable statistical distributions and plots to provide evidence for actionable insights gained from EDA.
 
 - Reproducible data pipeline with DVC for auditability and compliance.
+
+- Statistical validation of risk drivers for segmentation strategy.
 
 ---
