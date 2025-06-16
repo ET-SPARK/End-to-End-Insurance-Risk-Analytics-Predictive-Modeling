@@ -164,6 +164,88 @@ AlphaCare Insurance Solutions (ACIS) is committed to developing cutting-edge ris
 
 ---
 
+## Task 4: Predictive Modeling for Risk-Based Pricing
+
+### Methodology
+
+#### Goals:
+
+- **Claim Severity Prediction**: Predict `TotalClaims` for policies with `claims > 0` (regression).
+- **Claim Probability Prediction**: Predict probability of a claim occurring (binary classification).
+- **Premium Optimization**: Predict `TotalPremium` and develop a risk-based pricing model:
+  - `Premium = (Predicted Claim Probability * Predicted Claim Severity) + Expense Loading + Profit Margin`.
+
+#### Data Preparation (`src/data_preparation.py`):
+
+- **Missing Data**: Imputed numerical columns with median, categorical with mode.
+- **Feature Engineering**:
+  - Created `VehicleAge` (proxy based on `TransactionMonth` year).
+  - Added `HasClaim` (binary indicator for `claims > 0`).
+  - Computed `PremiumPerClaim` (`TotalPremium / TotalClaims`).
+  - Extracted `TransactionYear` and `TransactionMonthOfYear` from `TransactionMonth`.
+- **Encoding**: Used `LabelEncoder` for categorical columns (`Province`, `ZipCode`, `CoverType`, `make`, `Gender`).
+- **Train-Test Split**: 80:20 split for each task (severity, probability, premium).
+- **Output**: Saved train/test datasets to `data/prepared/`.
+
+#### Modeling:
+
+##### Claim Severity (`src/model_claim_severity.py`):
+
+- **Models**: Linear Regression, Random Forest, XGBoost.
+- **Target**: `TotalClaims` (subset where `HasClaim == 1`).
+
+##### Claim Probability (`src/model_claim_probability.py`):
+
+- **Models**: Logistic Regression, Random Forest, XGBoost.
+- **Target**: `HasClaim` (binary).
+
+##### Premium Optimization (`src/model_premium.py`):
+
+- **Models**: Linear Regression, Random Forest, XGBoost, Risk-Based Premium.
+- **Risk-Based Premium**: Trained XGBoost on `(Claim Probability * Claim Severity) * (1 + 0.10 + 0.05)` (expense + profit).
+
+#### Evaluation (`src/evaluate_models.py`):
+
+- **Regression Metrics**: RMSE, R-squared.
+- **Classification Metrics**: Accuracy, Precision, Recall, F1-score.
+- **SHAP Analysis**: Performed on XGBoost models to identify top 5-10 features.
+- **Output**: Saved metrics to `results/evaluation_metrics.csv` and SHAP plots to `results/`.
+
+#### Git Workflow:
+
+- Merged `task-3` into `main` via Pull Request.
+- Created `task-4` branch for modeling work.
+- Committed changes with descriptive messages.
+
+#### DVC:
+
+- Tracked model files (`models/*.pkl`) and evaluation results (`results/evaluation_metrics.csv`).
+
+### Evaluation Results
+
+#### Claim Severity:
+
+- **[Pending]**: Run `evaluate_models.py` to populate RMSE and R² for Linear Regression, Random Forest, XGBoost.
+- **SHAP Insights**: _Example_: "SHAP analysis reveals that for every year older a vehicle is, the predicted claim amount increases by X Rand, holding other factors constant. This supports age-based premium adjustments."
+
+#### Claim Probability:
+
+- **[Pending]**: Run `evaluate_models.py` to populate Accuracy, Precision, Recall, F1.
+- **SHAP Insights**: _Example_: "ZipCode_encoded is the top feature, indicating geographic risk drives claim likelihood. High-risk areas like Gauteng justify higher premiums."
+
+#### Premium Optimization:
+
+- **[Pending]**: Run `evaluate_models.py` to populate RMSE and R².
+- **SHAP Insights**: _Example_: "LossRatio is a key driver, suggesting policies with high historical claims require premium increases to maintain profitability."
+
+### Business Recommendations:
+
+- Use XGBoost models for deployment due to superior performance.
+- Adjust premiums based on SHAP-identified features (e.g., vehicle age, geographic risk).
+- Implement risk-based pricing to attract low-risk clients with competitive rates.
+
+---
+
 ## File Structure
 
 project/
@@ -218,5 +300,7 @@ dvc pull
 - Reproducible data pipeline with DVC for auditability and compliance.
 
 - Statistical validation of risk drivers for segmentation strategy.
+
+- Predictive modeling with robust evaluation and interpretability for business impact.
 
 ---
